@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="A front-end template that helps you build fast, modern mobile web apps.">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+    <title>Configuration - TurboSh</title>
+    <!-- Add to homescreen for Chrome on Android -->
+    <meta name="mobile-web-app-capable" content="yes">
+    <link rel="icon" sizes="192x192" href="images/favicon.png">
+    <!-- Add to homescreen for Safari on iOS -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="Material Design Lite">
+    <link rel="apple-touch-icon-precomposed" href="images/favicon.png">
+    <!-- Tile icon for Win8 (144x144 + tile color) -->
+    <meta name="msapplication-TileImage" content="images/touch/ms-touch-icon-144x144-precomposed.png">
+    <meta name="msapplication-TileColor" content="#3372DF">
+    <link rel="shortcut icon" href="images/favicon.png">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:regular,bold,italic,thin,light,bolditalic,black,medium&amp;lang=en">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-blue.min.css">
+    <link rel="stylesheet" href="assets/style/styles.css">
+    <link rel="stylesheet" href="assets/style/font-awesome.css">
+    <style>
+    #view-source {
+      position: fixed;
+      display: block;
+      right: 0;
+      bottom: 0;
+      margin-right: 40px;
+      margin-bottom: 40px;
+      z-index: 900;
+    }
+    </style>
+  </head>
+  <body class="mdl-demo mdl-color--grey-100 mdl-color-text--grey-700 mdl-base" id="container">
+    <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+      <header class="mdl-layout__header mdl-layout__header--scroll mdl-color--primary">
+        <div class="mdl-layout--large-screen-only mdl-layout__header-row">
+        </div>
+        <div class="mdl-layout--large-screen-only mdl-layout__header-row">
+          <h3>TurboSh</h3>
+        </div>
+        <div class="mdl-layout--large-screen-only mdl-layout__header-row">
+        </div>
+        <div class="mdl-layout__tab-bar mdl-js-ripple-effect mdl-color--primary-dark">
+          <a href="#env" class="mdl-layout__tab is-active nav-link" id="envLink" onclick="request(readEnv, 'get_env', 2);">Environnement</a>
+          <a href="#prompt" class="mdl-layout__tab nav-link" id="featuresLink">Prompt</a>
+          <a href="#informations" class="mdl-layout__tab nav-link" id="informationLink">Information</a>
+          <a href="#terminal" class="mdl-layout__tab nav-link" id="terminalLink">Terminal</a>
+          <button class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored mdl-shadow--4dp mdl-color--accent" id="close"  onclick="request(readQuit, 'quit', 1);">
+            <i class="material-icons" role="presentation">close</i>
+            <span class="visuallyhidden">Quitter</span>
+          </button>
+        </div>
+      </header>
+      <div id="bg-white">
+          <section class="section--center mdl-grid mdl-grid--no-spacing mdl-shadow--2dp" id="updateEnvWin">
+            <div class="mdl-card mdl-cell mdl-cell--12-col">
+              <div class="mdl-card__supporting-text">
+                <form>
+                  <h4>Modifier une variable</h4>
+                  <input type="text" readonly placeholder="Nom" id="nameUpdateEnv"/><span class="sep-equal">=</span>
+                  <input type="text" placeholder="Valeur" id="valUpdateEnv"/>
+                </form>
+              </div>
+              <div class="mdl-card__actions">
+                <a href="#" class="mdl-button" id="updateEnv">Modifier</a>
+              </div>
+            </div>
+          </section>
+      </div>
+      <main class="mdl-layout__content">
+        <div class="mdl-layout__tab-panel is-active" id="env">
+          <section class="section--center mdl-grid mdl-grid--no-spacing">
+            <div class="mdl-cell mdl-cell--12-col">
+              <h4>Variable d'environnement</h4><br>
+              <section class="section--center mdl-grid mdl-grid--no-spacing mdl-shadow--2dp">
+                <div class="mdl-card mdl-cell mdl-cell--12-col">
+                  <div class="mdl-card__supporting-text">
+                    <form>
+                      <h4>Ajouter une variable</h4>
+                      <input type="text" placeholder="Nom" id="nameAddEnv"/><span class="sep-equal">=</span>
+                      <input type="text" placeholder="Valeur" id="valAddEnv"/>
+                    </form>
+                  </div>
+                  <div class="mdl-card__actions">
+                    <a href="#" class="mdl-button" id="addEnv">Ajouter</a>
+                  </div>
+                </div>
+              </section><br>
+              <section class="section--center mdl-grid mdl-grid--no-spacing mdl-shadow--2dp">
+                <div class="mdl-card mdl-cell mdl-cell--12-col">
+                  <div class="mdl-card__supporting-text">
+                    <div id="listEnv">En attente des données</div><br>
+                  </div>
+                </div>
+              </section><br>
+            </div>
+          </section>
+        </div>
+        <div class="mdl-layout__tab-panel" id="prompt">
+          <section class="section--center mdl-grid mdl-grid--no-spacing">
+            <div class="mdl-cell mdl-cell--12-col">
+              <h4>Prompt</h4>
+              Choisissez un prompt parmi ceux disponibles
+
+              <h5>Liste</h5>
+              <div id="promptAddList">
+              </div>
+            </div>
+          </section>
+        </div>
+        <div class="mdl-layout__tab-panel" id="informations">
+          <section class="section--center mdl-grid mdl-grid--no-spacing">
+            <div class="mdl-cell mdl-cell--12-col">
+              <h4>Information</h4>
+
+              <h5>Découvrez votre PC</h5>
+              <br>
+              <p id="addConfig">
+              </p>
+            </div>
+          </section>
+        </div>
+        <div class="mdl-layout__tab-panel is-active" id="terminal" style="display:none;">
+          <section class="section--center mdl-grid mdl-grid--no-spacing mdl-shadow--2dp">
+            <div class="mdl-card mdl-cell mdl-cell--12-col">
+              <div class="mdl-card__supporting-text">
+                  <h4>Terminal</h4>
+                  <div id="terminalCore"></div>
+                  <!--<textarea readonly id="terminalCore"></textarea>-->
+                  <textarea id="terminalInput">$> </textarea>
+              </div>
+            </div>
+          </section><br>
+        </div>
+      </main>
+      <footer class="mdl-mega-footer">
+        <div class="mdl-mega-footer--bottom-section">
+          <div class="mdl-logo" title="Epitech Student">
+            <span class="fa fa-code"></span> with <span class="fa fa-heart-o"></span> by <span class="fa fa-graduation-cap"></span>
+          </div>
+          <ul class="mdl-mega-footer--link-list">
+            <li><a href="/help">Aide</a></li>
+            <li><a href="/privacy">Confidentialité</a></li>
+          </ul>
+        </div>
+      </footer>
+    </div>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script src="https://code.getmdl.io/1.3.0/material.min.js"></script>
+    <script src="assets/js/jquery-3.2.1.min.js"></script>
+    <script src="assets/js/ajax.js"></script>
+    <script src="assets/js/terminal.js"></script>
+    <script src="assets/js/prompt.js"></script>
+  </body>
+</html>
