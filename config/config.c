@@ -5,7 +5,7 @@
 ** Login   <arthur@epitech.net>
 ** 
 ** Started on  Wed Dec 21 21:16:01 2016 Arthur Knoepflin
-** Last update Sun May 21 04:02:30 2017 Nicolas Polomack
+** Last update Sun Aug 27 18:50:07 2017 Arthur Knoepflin
 */
 
 #include <stdio.h>
@@ -90,7 +90,7 @@ int		config_http(t_config *config)
   srand(getpid() * time(NULL));
   if ((port = init_connection(&serv)) == -1)
     return (1);
-  my_putstr("Server started\n");
+  my_printf("Server started on http://localhost:%d/\n", port);
   launch_nav(p_nav, port, config->env);
   core(serv, config, 0);
   close(serv);
