@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 **
 ** Started on  Sat Jan 14 18:04:39 2017 Nicolas Polomack
-** Last update Sun May 21 04:12:04 2017 Nicolas Polomack
+** Last update Mon Sep  4 15:41:13 2017 nicolaspolomack
 */
 
 #include <fcntl.h>
@@ -22,7 +22,7 @@ int		exec_branch(t_shell *shell,
 			    t_command **head,
 			    int fds[3], int *ret)
 {
-  int	r;
+  int		r;
 
   if ((is_to_fork((*head)->link) || (*head)->next == NULL) &&
       exec_redirected_builtins(shell, fds[2], &r, fds) != 0)

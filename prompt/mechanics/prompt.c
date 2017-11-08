@@ -11,6 +11,7 @@
 #include <unistd.h>
 #include <string.h>
 #include <stdlib.h>
+#include "my.h"
 #include "shell.h"
 #include "auto_complete.h"
 
@@ -47,6 +48,18 @@ static void	make_action(t_shell *shell, char c)
     add_char(shell, c);
 }
 
+void	color_text(t_shell *shell)
+{
+  while (shell->w.cur-- != 0)
+    write(1, shell->w.backw, strlen(shell->w.backw));
+  if (shell->line)
+    {
+      my_putstr("\033[36m");
+      my_putstr(shell->line);
+      my_putstr("\033[0m");
+    }
+}
+
 void	prompt_line(t_shell *shell)
 {
   char	c;
@@ -68,7 +81,10 @@ void	prompt_line(t_shell *shell)
         shell->line = strdup("");
       if (c == 10 || c == 0 || c == 4 ||
           (c == -2 && !shell->tty))
-        break;
+	{
+	  color_text(shell);
+          break;
+	}
       make_action(shell, c);
     }
   if (shell->tty &&

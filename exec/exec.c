@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 **
 ** Started on  Mon Jan  9 11:14:09 2017 Nicolas Polomack
-** Last update Sun May 21 20:18:18 2017 Nicolas Polomack
+** Last update Fri Nov 2 03:39:20 2017 nicolaspolomack
 */
 
 #include <stdlib.h>
@@ -84,6 +84,23 @@ unsigned int	exec_action(t_shell *shell, unsigned int args)
   return (r);
 }
 
+int	format_commands(t_shell *shell)
+{
+  t_command	*head;
+  int		i;
+
+  head = shell->commands;
+  while (head)
+    {
+      i = -1;
+      while (head->av[++i])
+	if ((head->av[i] = format_arg(head->av[i])) == NULL)
+	  return (-1);
+      head = head->next;
+    }
+  return (0);
+}
+
 unsigned int	exec_line(t_shell *shell, unsigned int args)
 {
   if (parse_history(shell, args) == -1 || parse_alias(shell) == -1 ||
@@ -94,14 +111,13 @@ unsigned int	exec_line(t_shell *shell, unsigned int args)
     return (set_error(shell, 1));
   if (is_line_empty(shell->line))
     return (0);
-  replace_home(shell);
   free(shell->last);
   shell->last = NULL;
   if ((shell->final = bufferize(shell->line,
 				args = count_args(shell->line))) == NULL)
     return (1);
   if (set_commands(shell) == -1 || set_redirects(shell) == -1 ||
-      check_error(shell) == -1)
+      check_error(shell) == -1 || format_commands(shell) == -1)
     return (shell->exit = 1);
   shell->cur = shell->commands;
   args = exec_action(shell, args);

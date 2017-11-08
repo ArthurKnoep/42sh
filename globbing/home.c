@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 ** 
 ** Started on  Sat May 13 21:14:22 2017 Nicolas Polomack
-** Last update Sun May 21 04:21:36 2017 Nicolas Polomack
+** Last update Fri Nov 2 03:40:24 2017 nicolaspolomack
 */
 
 #include <stdlib.h>
@@ -33,30 +33,30 @@ static void	insert_home(t_shell *shell, int i)
   shell->line = str;
 }
 
+void	skip_string(char *str, int *i)
+{
+  char		quote;
+
+  quote = str[(*i)++];
+  while (str[*i] && str[*i] != quote)
+    *i += 1;
+  *i -= (str[*i] == 0);
+}
+
 void	replace_home(t_shell *shell)
 {
   int	i;
-  int	can_edit;
 
   if (shell->home == NULL)
     return ;
   i = -1;
-  can_edit = 1;
   while (shell->line[++i])
-    if (is_space(shell->line[i]))
-      can_edit = skip_spaces(shell, &i);
-    else if (is_delimiter(shell->line[i]))
-      can_edit = 1;
+    if (shell->line[i] == '\\')
+      i += !!(shell->line[i + 1]);
+    else if (is_space(shell->line[i]))
+      skip_spaces(shell, &i);
     else if (shell->line[i] == '\'' || shell->line[i] == '"')
-      {
-	i += 1;
-        while (shell->line[i] && shell->line[i] != '\''
-	       && shell->line[i] != '"')
-          i += 1;
-	i -= (shell->line[i] == 0) ? 1 : 0;
-      }
-    else if (shell->line[i] == '~' && can_edit)
+      skip_string(shell->line, &i);
+    else if (shell->line[i] == '~')
       insert_home(shell, i);
-    else
-      can_edit = 0;
 }

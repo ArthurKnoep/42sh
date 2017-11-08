@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 ** 
 ** Started on  Sat Mar 25 20:21:25 2017 Nicolas Polomack
-** Last update Tue May 16 19:09:26 2017 Arthur Knoepflin
+** Last update Sun Jul 30 04:32:00 2017 nicolaspolomack
 */
 
 int	is_separator(char c)
@@ -27,7 +27,8 @@ int	is_alphanum(char c)
 {
   return ((c >= 'a' && c <= 'z') ||
 	  (c >= 'A' && c <= 'Z') ||
-	  (c >= '0' && c <= '9'));
+	  (c >= '0' && c <= '9') ||
+	  c == '_');
 }
 
 int	is_num(char *str)

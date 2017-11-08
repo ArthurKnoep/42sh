@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 **
 ** Started on  Mon Jan  9 10:57:32 2017 Nicolas Polomack
-** Last update Sun May 21 04:21:23 2017 Nicolas Polomack
+** Last update Fri Nov 2 03:44:56 2017 nicolaspolomack
 */
 
 #include <stdlib.h>
@@ -94,21 +94,21 @@ int	parse_vars(t_shell *shell)
   cur = -1;
   is_free = 1;
   while (shell->line[++cur])
-    {
-      if (shell->line[cur] == '\'' && is_free)
-	while (shell->line[cur + 1] && shell->line[cur + 1] != '\'')
-	  cur += 1;
-      else if (shell->line[cur] == '"')
-	is_free = !is_free;
-      else if (shell->line[cur] == '$' && shell->line[cur + 1]
-	       && !is_separator(shell->line[cur + 1]) &&
-	       shell->line[cur + 1] != '"')
-	{
-	  if ((var = get_gvar(shell->line + cur + 1)) == NULL)
-	    exit(84);
-	  if (replace_var(shell, &cur, var) == -1)
-	    return (-1);
-	}
-    }
+    if (shell->line[cur] == '\\')
+      cur += !!(shell->line[cur + 1]);
+    else if (shell->line[cur] == '\'' && is_free)
+      while (shell->line[cur + 1] && shell->line[cur + 1] != '\'')
+	cur += 1;
+    else if (shell->line[cur] == '"')
+      is_free = !is_free;
+    else if (shell->line[cur] == '$' && shell->line[cur + 1]
+	     && !is_separator(shell->line[cur + 1]) &&
+	     shell->line[cur + 1] != '"')
+      {
+	if ((var = get_gvar(shell->line + cur + 1)) == NULL)
+	  exit(84);
+	if (replace_var(shell, &cur, var) == -1)
+	  return (-1);
+      }
   return (0);
 }

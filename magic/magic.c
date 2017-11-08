@@ -38,12 +38,7 @@ static void	insert_inline(t_shell *shell, char **buffer,
     {
       l[1] = -1;
       while (buffer[++(l[1])])
-	{
-	  l[0] = -1;
-	  while (buffer[l[1]][++l[0]])
-	    buffer[l[1]][l[0]] = (buffer[l[1]][l[0]] == '\'') ?
-	      '"' : buffer[l[1]][l[0]];
-	}
+	printf("SANITIZED: %s\n", buffer[l[1]] = sanitize(buffer[l[1]]));
       result = construct_magic(buffer);
       if ((asprintf(&ret, "%.*s%s%s", i, shell->line, result,
 		    shell->line + i + len + 2)) == -1)

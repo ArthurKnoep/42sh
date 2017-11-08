@@ -81,7 +81,9 @@ int		parse_alias(t_shell *shell)
   e = NULL;
   memset((&shell->subst), 0, sizeof(t_subst));
   while (shell->line[++i])
-    if (is_space(shell->line[i]) || is_separator(shell->line[i]))
+    if (shell->line[i] == '\\')
+      i += !!(shell->line[i + 1]);
+    else if (is_space(shell->line[i]) || is_separator(shell->line[i]))
       {
 	while (shell->line[i] &&
 	       (is_space(shell->line[i]) || is_separator(shell->line[i])))

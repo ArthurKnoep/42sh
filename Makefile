@@ -5,7 +5,7 @@
 ## Login   <nicolas.polomack@epitech.eu>
 ##
 ## Started on  Tue Nov 15 09:05:43 2016 Nicolas Polomack
-## Last update Sun May 21 23:35:06 2017 Arthur Knoepflin
+## Last update Wed Nov  8 13:08:19 2017 nicolaspolomack
 ##
 
 MAKE1	=	make -sC lib/my --no-print-directory
@@ -128,6 +128,7 @@ SRC	=	alias/alias.c				\
 		prompt/ketchup.c			\
 		prompt/bigmac.c				\
 		prompt/oh_my_zsh.c			\
+		prompt/mysh.c				\
 		prompt/mechanics/advanced.c		\
 		prompt/mechanics/fct.c			\
 		prompt/mechanics/tmp.c			\
@@ -159,7 +160,9 @@ SRC	=	alias/alias.c				\
 
 OBJ	=	$(SRC:.c=.o)
 
-CFLAGS	=	-Iinclude -Llib/my -lmy -lncurses -D_GNU_SOURCE=1 -W -Wall -Wextra -Werror -g
+CFLAGS	=	-Iinclude -D_GNU_SOURCE -W -Wall -Wextra -Werror
+
+FLAGS	=	-Llib/my -lmy -lncurses -ltinfo
 
 REDDARK	=	\033[31;2m
 
@@ -189,7 +192,7 @@ $(NAME):$(OBJ)
 	@$(MAKE1)
 	@echo -e "\t$(GREEN)OK$(RES)$(CYAN)!$(RES)"
 	@echo -en "$(CYAN)Linking TurboSh...$(RES)"
-	@gcc -o $(NAME) $(OBJ) $(CFLAGS)
+	@gcc -o $(NAME) $(OBJ) $(CFLAGS) $(FLAGS)
 	@echo -e "\t$(GREEN)OK$(RES)$(CYAN)!$(RES)"
 	@echo
 	@echo -e "$(GREEN)---- TURBOSH READY ----$(RES)"
