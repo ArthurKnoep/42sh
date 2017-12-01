@@ -12,6 +12,48 @@
 #include <stdlib.h>
 #include <string.h>
 #include "shell.h"
+#include "my.h"
+
+int	count_separators(char *str)
+{
+  int	i;
+  int	count;
+
+  i = -1;
+  count = 0;
+  while (str[++i])
+    if (str[i] == '\\')
+      i += !!(str[i + 1]);
+    else if (is_separator(str[i]))
+      count += 1;
+  return (count);
+}
+
+char	*sanitize(char *str)
+{
+  int	i1;
+  int	i2;
+  int	size;
+  char	*ret;
+
+  i1 = -1;
+  i2 = 0;
+  size = count_separators(str);
+  if ((ret = malloc(strlen(str) + (size * 2) + 1)) == NULL)
+    return (NULL);
+  while (str[++i1])
+    if (str[i1] == '\\' || is_separator(str[i1]) || str[i1] == '"' ||
+	str[i1] == '\'' || is_space(str[i1]))
+      {
+	ret[i2++] = '\\';
+	ret[i2++] = str[++i1];
+      }
+    else
+      ret[i2++] = str[i1];
+  ret[i2] = 0;
+  free(str);
+  return (ret);
+}
 
 char	*construct_magic(char **tab)
 {
@@ -28,6 +70,10 @@ char	*construct_magic(char **tab)
   *ret = 0;
   i = -1;
   while (tab[++i])
-    sprintf(ret, "%s '%s'", ret, tab[i]);
+    {
+      if (i)
+	strcat(ret, " ");
+      strcat(ret, tab[i]);
+    }
   return (ret);
 }

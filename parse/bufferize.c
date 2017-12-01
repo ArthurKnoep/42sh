@@ -16,27 +16,111 @@
 #include "auto_complete.h"
 #include "get_next_line.h"
 
-char	**bufferize(char *av, int n)
+int	count_real_chars(char *str)
+{
+  int	i;
+  int	c;
+
+  i = -1;
+  c = 0;
+  while (str[++i])
+    {
+      if (str[i] == '\\')
+	i += !!(str[i + 1]);
+      c += 1;
+    }
+  return (c);
+}
+
+char	*unquote_arg(char *str)
+{
+  char	*ret;
+  int	len;
+
+  len = my_strlen(str) - 2;
+  if ((ret = my_strndup(str + 1, len)) == NULL)
+    return (NULL);
+  free(str);
+  return (ret);
+}
+
+char	*format_arg(char *str)
+{
+  int	i1;
+  int	i2;
+  char	*ret;
+
+  i1 = -1;
+  i2 = 0;
+  if (str[i1 + 1] == '"' || str[i1 + 1] == '\'')
+    str = unquote_arg(str);
+  if ((ret = malloc(sizeof(char) * (count_real_chars(str) + 1))) == NULL)
+    return (NULL);
+  while (str[++i1])
+    if (str[i1] == '\\')
+      if (str[i1 + 1] == 0)
+	return (NULL);
+      else
+	{
+	  i1 += !!(str[i1 + 1]);
+	  ret[i2++] = str[i1];
+	}
+    else
+      ret[i2++] = str[i1];
+  ret[i2] = 0;
+  free(str);
+  return (ret);
+}
+
+int	arg_length(char *str)
+{
+  int	i;
+  char	quote;
+
+  i = 0;
+  if (str[i] == '"' || str[i] == '\'')
+    {
+      quote = str[i++];
+      while (str[i] && str[i] != quote)
+        {
+	  if (str[i] == '\\')
+	    i += !!(str[i + 1]);
+	  i += 1;
+	}
+      return ((str[i] == 0) ? -1 : (i + 1));
+    }
+  while (str[i] && !is_space(str[i]))
+    {
+      if (str[i] == '\\')
+	i += !!(str[i + 1]);
+      i += 1;
+    }
+  return (i);
+}
+
+char	**bufferize(char *str, int n)
 {
   int	i;
   int	args;
   char	**final;
+  int	len;
 
   args = 0;
   i = 0;
-  if ((final = malloc(sizeof(char *) * (n + 2))) == NULL)
+  if ((final = malloc(sizeof(char *) * (n + 1))) == NULL)
     return (NULL);
-  while ((i = get_next_arg(av, &(final[args]), i)) != -2)
-    {
-      if (i == -3)
-        my_print_err("Unmatched \"\n");
-      if (i == -4)
-	my_print_err("Unmatched '\n");
-      if (i == -1 || i == -3 || i == -4)
-        return (NULL);
-      args += 1;
-    }
-  final[args + 1] = NULL;
+  while (str[i])
+    if (is_space(str[i]))
+      i += 1;
+    else
+      {
+	if ((len = arg_length(str + i)) == -1 ||
+	    (final[args] = my_strndup(str + i, len)) == NULL)
+	  return (NULL);
+	i += len;
+	args += 1;
+      }
+  final[args] = NULL;
   return (final);
 }
 

@@ -5,35 +5,58 @@
 ** Login   <nicolas.polomack@epitech.eu>
 ** 
 ** Started on  Fri May  5 06:44:42 2017 Nicolas Polomack
-** Last update Thu May 18 01:38:21 2017 Nicolas Polomack
+** Last update Tue Oct 17 10:51:25 2017 nicolaspolomack
 */
 
 #include <string.h>
 #include <stdio.h>
 #include "my.h"
 
+char	get_escaped_char(char c)
+{
+  if (c == 'a')
+    return (0x7);
+  else if (c == 'b')
+    return (0x8);
+  else if (c == 'f')
+    return (0xc);
+  else if (c == 'n')
+    return (0xa);
+  else if (c == 'r')
+    return (0xd);
+  else if (c == 't')
+    return (0x9);
+  else if (c == 'v')
+    return (0xb);
+  else if (c == '\\')
+    return ('\\');
+  return (c);
+}
+
 void	print_char(char *c, int *i)
 {
   if (c[*i] == '\\')
-    {
-      *i += 1;
-      if (c[*i] == 'a')
-	my_putchar(0x7);
+      if (c[++(*i)] == 'a')
+        my_putchar(0x7);
       else if (c[*i] == 'b')
-	my_putchar(0x8);
+        my_putchar(0x8);
       else if (c[*i] == 'f')
-	my_putchar(0xc);
+        my_putchar(0xc);
       else if (c[*i] == 'n')
-	my_putchar(0xa);
+        my_putchar(0xa);
       else if (c[*i] == 'r')
-	my_putchar(0xd);
+        my_putchar(0xd);
       else if (c[*i] == 't')
-	my_putchar(0x9);
+        my_putchar(0x9);
       else if (c[*i] == 'v')
-	my_putchar(0xb);
+        my_putchar(0xb);
       else if (c[*i] == '\\')
 	my_putchar('\\');
-    }
+      else
+	{
+	  my_putchar('\\');
+	  my_putchar(c[*i]);
+	}
   else
     my_putchar(c[*i]);
 }

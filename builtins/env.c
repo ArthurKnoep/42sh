@@ -5,7 +5,7 @@
 ** Login   <arthur.knoepflin@epitech.eu>
 ** 
 ** Started on  Thu May 18 11:01:26 2017 Arthur Knoepflin
-** Last update Thu May 18 23:26:51 2017 Arthur Knoepflin
+** Last update Mon Sep  4 15:40:10 2017 nicolaspolomack
 */
 
 #include "shell.h"
@@ -45,7 +45,10 @@ int		env_b(t_shell *shell, int args)
   else
     {
       if ((parse = parse_env(shell->cur->av)) == NULL)
-	return (1);
+	{
+	  my_puterror("env: parse error.\n");
+	  return (1);
+	}
       if (parse->null == 1 && parse->cmd != NULL)
       	my_puterror("env: cannot specify --null (-0) with command.\n");
       else if (parse->null == 1 && parse->cmd == NULL)

@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 ** 
 ** Started on  Thu Apr  6 13:59:24 2017 Nicolas Polomack
-** Last update Thu May 18 09:29:05 2017 Nicolas Polomack
+** Last update Fri Nov 2 03:39:52 2017 nicolaspolomack
 */
 
 #include <stdlib.h>
@@ -105,28 +105,41 @@ static void	final_things(t_shell *shell, char *last, int save)
   free(str);
 }
 
+static int	is_hist_sym(t_shell *shell, int i)
+{
+  if (my_strncmp(shell->line + i, "!!", 2) == 0)
+    {
+      if (insert_full_hist(shell, i) == -1)
+	return (-1);
+    }
+  else if (my_strncmp(shell->line + i, "!$", 2) == 0)
+    {
+      if (insert_last_hist(shell, i) == -1)
+	return (-1);
+    }
+  else if (my_strncmp(shell->line + i, "!:", 2) == 0 &&
+	   (shell->line[i + 2] >= '0' &&
+	    shell->line[i + 2] <= '9'))
+    if (insert_one_hist(shell, i, shell->line[i + 2] - '0') == -1)
+      return (-1);
+  return (0);
+}
+
 int	parse_history(t_shell *shell, int save)
 {
   int	i;
   char	*last;
+  int	quoted = 0;
 
   i = -1;
   last = shell->line;
   while (shell->hist.last && shell->line[++i])
-    if (my_strncmp(shell->line + i, "!!", 2) == 0)
-      {
-	if (insert_full_hist(shell, i) == -1)
-	  return (-1);
-      }
-    else if (my_strncmp(shell->line + i, "!$", 2) == 0)
-      {
-	if (insert_last_hist(shell, i) == -1)
-	  return (-1);
-      }
-    else if (my_strncmp(shell->line + i, "!:", 2) == 0 &&
-	     (shell->line[i + 2] >= '0' &&
-	      shell->line[i + 2] <= '9'))
-      if (insert_one_hist(shell, i, shell->line[i + 2] - '0') == -1)
+    if (shell->line[i] == '\\')
+      i += !!(shell->line[i + 1]);
+    else if (shell->line[i] == '\'')
+      quoted = !quoted;
+    else if (!quoted)
+      if (is_hist_sym(shell, i) == -1)
 	return (-1);
   final_things(shell, last, save);
   return (0);

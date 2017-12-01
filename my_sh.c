@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 **
 ** Started on  Tue Jan  3 09:03:30 2017 Nicolas Polomack
-** Last update	Sat May 13 21:02:27 2017 Full Name
+** Last update Wed Aug 1 17:20:09 2017 nicolaspolomack
 */
 
 #include <string.h>
@@ -113,18 +113,19 @@ static int	start_standard_shell(t_shell *shell)
   return (shell->exit);
 }
 
-int		main(int ac, char **av)
+static int	treat_arg(t_shell *shell, int ac, char **av, int fd)
 {
-  t_shell	shell;
-  int		fd;
-
-  setenv("SHELL", av[0], 1);
-  if (init_shell(&shell) == -1)
-    return (84);
-  shell.av = av + ((ac == 1) ? 0 : 1);
-  if (ac == 1)
-    return (start_standard_shell(&shell));
-  else
+  if (strcmp(av[1], "-c") == 0)
+    {
+      if (ac >= 3)
+	{
+	  signal(SIGINT, SIG_IGN);
+	  signal(SIGTTOU, SIG_IGN);
+	  quick_exec(shell, strdup(av[2]));
+	}
+      return (shell->exit);
+    }
+  else if (av[1][0] != '-')
     {
       if ((fd = open(av[1], O_RDONLY)) == -1)
 	{
@@ -134,9 +135,26 @@ int		main(int ac, char **av)
 	}
       if (dup2(fd, 0) == -1)
 	return (1);
-      shell.tty = 0;
-      shell.ioctl = 0;
-      return (start_standard_shell(&shell));
+      shell->tty = 0;
+      shell->ioctl = 0;
+      return (start_standard_shell(shell));
     }
+  return (start_standard_shell(shell));
+}
+
+int		main(int ac, char **av)
+{
+  t_shell	shell;
+  int		fd;
+
+  fd = 0;
+  setenv("SHELL", av[0], 1);
+  if (init_shell(&shell) == -1)
+    return (84);
+  shell.av = av + ((ac == 1) ? 0 : 1);
+  if (ac == 1)
+    return (start_standard_shell(&shell));
+  else
+    return (treat_arg(&shell, ac, av, fd));
   return (0);
 }

@@ -5,7 +5,7 @@
 ** Login   <arthur.knoepflin@epitech.eu>
 ** 
 ** Started on  Tue May 16 17:52:03 2017 Arthur Knoepflin
-** Last update Sun May 21 23:37:52 2017 Arthur Knoepflin
+** Last update Tue Jul 24 01:22:01 2017 nicolaspolomack
 */
 
 #include <stdlib.h>
@@ -29,6 +29,8 @@ static void	show_prompt(t_shell *shell)
   bigmac_prompt(shell);
   my_printf("\n6 : Oh My Zsh      : ");
   oh_my_zsh(shell);
+  my_printf("\n7 : Mysh           : ");
+  mysh(shell);
   my_printf("\n");
 }
 
@@ -45,7 +47,7 @@ int	prompt(t_shell *shell, int args)
       my_printf("Make your choice : ");
       if (!(choice = get_next_line(0)) && my_printf("\n"))
 	return (1);
-      if (is_num(choice) && atoi(choice) >= 0 && atoi(choice) <= 6)
+      if (is_num(choice) && atoi(choice) >= 0 && atoi(choice) <= 7)
 	{
 	  shell->prompt = my_getnbr(choice);
 	  setenv("PROMPT", choice, 1);

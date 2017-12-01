@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 **
 ** Started on  Tue Jan  3 19:13:06 2017 Nicolas Polomack
-** Last update Sun May 21 11:22:24 2017 Arthur Knoepflin
+** Last update Fri Nov 2 03:37:51 2017 nicolaspolomack
 */
 
 #ifndef SHELL_H_
@@ -183,6 +183,7 @@ int	check_exit(t_shell *, int);
 int	compare_stats(struct stat *);
 void	check_exec(t_shell *, int, int *);
 void	exec_piped_command(char *, t_command *, int[2], t_shell *);
+char	*format_arg(char *);
 
 /*
 ** alias/alias.c
@@ -225,6 +226,7 @@ void	save_history(t_shell *);
 int	disp_hist(t_shell *, int);
 void	add_hist_elem(t_shell *, char *);
 void	init_history(t_shell *);
+void	skip_string(char *, int *);
 
 /*
 ** history2.c
@@ -239,6 +241,7 @@ int	magic(t_shell *);
 /*
 ** magic/construct.c
 */
+char	*sanitize(char *);
 char	*construct_magic(char **);
 
 /*
@@ -349,6 +352,7 @@ void	add_var(t_shell *, char *, char *);
 /*
 ** echo.c
 */
+char	get_escaped_char(char);
 int	echo_term(char **);
 
 /*

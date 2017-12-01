@@ -29,6 +29,10 @@ $(document).ready(function() {
 	"name" : "Oh My Zsh",
 	"prompt" : "<span class=\"green\">→</span> <span class=\"light-blue\">path</span> <span class=\"blue\">\
 git:(</span><span class=\"red\">branch</span><span class=\"blue\">)</span>"
+    },
+    {
+      "name" : "Mysh",
+      "prompt" : "<span class=\"red\">(0) 42sh</span> <span class=\"green\">~/actual/path</span> $> "
     }
   ];
   var selected = -1;

@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 **
 ** Started on  Mon Jan  9 10:42:33 2017 Nicolas Polomack
-** Last update Sun May 21 17:26:36 2017 Nicolas Polomack
+** Last update Tue Jun 20 19:36:14 2017 nicolaspolomack
 */
 
 #include <stdlib.h>
@@ -58,7 +58,7 @@ int		disp_all_alias(t_shell *shell)
       while (head->command[++i])
 	if (head->command[i] == ' ')
 	  mode = 1;
-      my_printf(mode ? "%s\t(%s)\n" : "%s\t%s\n",
+      my_printf(mode ? "alias %s='%s'\n" : "alias %s=%s\n",
 		head->alias, head->command);
       head = head->next;
     }

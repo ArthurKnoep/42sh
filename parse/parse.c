@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 **
 ** Started on  Mon Jan  9 10:50:20 2017 Nicolas Polomack
-** Last update Sun May 21 00:04:14 2017 Nicolas Polomack
+** Last update Fri Nov 2 03:53:32 2017 nicolaspolomack
 */
 
 #include <stdlib.h>
@@ -23,22 +23,18 @@ unsigned int	count_args(char *str)
   i = -1;
   args = 0 + (quote = 0);
   while (str[++i])
-    {
-      if (str[i] == '\'' || str[i] == '"')
-	{
-	  quote = str[i++];
-	  while (str[i] != quote && str[i] != 0)
-	    i += 1;
-	  if (!(str[i]))
-	    return (-1);
-	  args += 1;
-	}
-      else if (i == 0 && str[i] != ' ' && str[i] != '\t')
-        args += 1;
-      else if ((str[i] != ' ' && str[i] != '\t') &&
-	       (str[i - 1] == ' ' || str[i - 1] == '\t'))
-        args += 1;
-    }
+    if (str[i] == '\\')
+      i += !!(str[i + 1]);
+    else if (str[i] == '\'' || str[i] == '"')
+      {
+	skip_string(str, &i);
+	args += 1;
+      }
+    else if (i == 0 && str[i] != ' ' && str[i] != '\t')
+      args += 1;
+    else if ((str[i] != ' ' && str[i] != '\t') &&
+	     (str[i - 1] == ' ' || str[i - 1] == '\t'))
+      args += 1;
   return (args + 1);
 }
 
@@ -50,13 +46,21 @@ int	get_quoted_text(char *arg, char **final, int l, char c)
   j = 1;
   i = -1;
   while (arg[j] != c && arg[j] != 0)
-    j += 1;
+    {
+      if (arg[j] == '\\')
+	j += !!(arg[j]);
+      j += 1;
+    }
   if (arg[j++] == 0)
     return ((c == '"') ? -3 : -4);
   if ((*final = malloc(j + 1)) == NULL)
     return (-1);
   while (arg[++i + 1] != c)
-    (*final)[i] = arg[i + 1];
+    {
+      if (arg[i + 1] == '\\')
+	i += !!(arg[i + 2]);
+      (*final)[i] = arg[i + 1];
+    }
   (*final)[i] = 0;
   while (arg[j] && (arg[j] == ' ' || arg[j] == '\t'))
     j += 1;

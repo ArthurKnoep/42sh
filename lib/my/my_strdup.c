@@ -35,6 +35,8 @@ char	*my_strndup(char *str, int size)
   char	*ret;
 
   ret = malloc(size + 1);
+  if (ret == NULL)
+    return (NULL);
   i = -1;
   while (++i < size)
     ret[i] = str[i];
@@ -54,14 +56,8 @@ char	**my_strarrdup(char **arr)
     return (NULL);
   i = -1;
   while (arr[++i])
-    {
-      if (arr[i][0] == '"')
-	final[i] = my_strndup(arr[i] + 1, my_strstrlen(arr[i] + 1, "\""));
-      else if (arr[i][0] == '\'')
-	final[i] = my_strndup(arr[i] + 1, my_strstrlen(arr[i] + 1, "'"));
-      else
-	final[i] = my_strdup(arr[i]);
-    }
+    if ((final[i] = my_strdup(arr[i])) == NULL)
+      return (NULL);
   final[i] = NULL;
   return (final);
 }
